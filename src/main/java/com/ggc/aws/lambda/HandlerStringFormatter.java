@@ -15,9 +15,10 @@ import java.io.InputStreamReader;
  * This is a simple handler to log the results of reading and S3 Object
  */
 public class HandlerStringFormatter implements IObjectHandler {
-    final static Logger _log = LoggerFactory.getLogger(HandlerStringFormatter.class);
 
-    public static final String METADATA_EXAMPLE = "metadata_example";
+    private final static Logger _log = LoggerFactory.getLogger(HandlerStringFormatter.class);
+
+    static final String METADATA_EXAMPLE = "metadata_example";
 
     @Override
     public void handle(S3Object object) {

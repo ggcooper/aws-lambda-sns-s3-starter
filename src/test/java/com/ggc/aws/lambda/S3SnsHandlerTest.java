@@ -17,31 +17,21 @@ import java.util.List;
 
 import static org.mockito.Mockito.mock;
 
-//import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-
-/**
- * To run integration test: 1. In command prompt (assuming you've setup python
- * project): a. cd ..\git\hp\sds-predictive-statistical-ml\py b. run python
- * manage.py runserver 2. Uncomment @Test attribute on method 3. Hightlight
- * method name and click "run as junit"
- *
- * @author cooperg
- */
 public class S3SnsHandlerTest extends HandlerTestBase {
 
     private ObjectMapper mapper;
     private AmazonS3 amazonS3;
-
-    private IObjectHandler handler = mock(IObjectHandler.class);
+    private IObjectHandler handler;
 
     @Before
     public void setup() {
         amazonS3 = mock(AmazonS3.class);
         mapper = new ObjectMapper();
+        handler = mock(IObjectHandler.class);
     }
 
-    private S3SnsHandler getMockTarget() throws Exception { //}, AmazonCloudWatch cWClient) {
-        S3SnsHandler target = Mockito.spy(new S3SnsHandler());//, cWClient));
+    private S3SnsHandler getMockTarget() throws Exception {
+        S3SnsHandler target = Mockito.spy(new S3SnsHandler());
         Mockito.doReturn(amazonS3).when(target).getS3Client();
         return target;
     }
@@ -49,7 +39,7 @@ public class S3SnsHandlerTest extends HandlerTestBase {
     @Test
     public void testHandleRequest() throws Exception {
 
-        S3SnsHandler target = getMockTarget();//, amazonCw);
+        S3SnsHandler target = getMockTarget();
         Mockito.doReturn(handler).when(target).getHandler();
 
         target.handleRequest(this.getSNSEvent("key"), null);
@@ -59,7 +49,7 @@ public class S3SnsHandlerTest extends HandlerTestBase {
 
     @Test
     public void testHandleRequestNullHandler() throws Exception {
-        S3SnsHandler target = getMockTarget();//, amazonCw);
+        S3SnsHandler target = getMockTarget();
         Mockito.doReturn("").when(target).getEnvironmentVariable(Mockito.anyString());
 
         String key = "key";

@@ -9,42 +9,26 @@ import com.amazonaws.services.s3.event.S3EventNotification;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.util.StringUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-//import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-//import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
-//import com.amazonaws.services.cloudwatch.model.Dimension;
-//import com.amazonaws.services.cloudwatch.model.MetricDatum;
-//import com.amazonaws.services.cloudwatch.model.PutMetricDataRequest;
-//import com.amazonaws.services.cloudwatch.model.StandardUnit;
 
 public class S3SnsHandler implements RequestHandler<SNSEvent, String> {
 
-    static final Logger _log = LoggerFactory.getLogger(S3SnsHandler.class);
-    static final String ENV_CLASS_NAME = "ENV_CLASS_NAME";
+    private static final Logger _log = LoggerFactory.getLogger(S3SnsHandler.class);
+    private static final String ENV_CLASS_NAME = "ENV_CLASS_NAME";
 
 
-    private ObjectMapper mapper = new ObjectMapper();
     private AmazonS3 s3Client;
-    //	private AmazonCloudWatch cloudWatchClient;
     private Class handlerClass;
-
-    public S3SnsHandler() {
-
-    }
 
     @Override
     public String handleRequest(SNSEvent input, Context context) {
 
         _log.debug("Invoke started");
 
-        // _log.info("Info: " + System.getenv("AWS_REGION"));
         try {
 
             if (null != input && null != input.getRecords() && !input.getRecords().isEmpty()) {
@@ -88,7 +72,7 @@ public class S3SnsHandler implements RequestHandler<SNSEvent, String> {
 
     private List<GetObjectRequest> getObjects(S3EventNotification event) {
 
-        List<GetObjectRequest> requests = new ArrayList<GetObjectRequest>();
+        List<GetObjectRequest> requests = new ArrayList<>();
 
         // validate there are records
         if (null != event && null != event.getRecords() && !event.getRecords().isEmpty()) {
@@ -107,36 +91,6 @@ public class S3SnsHandler implements RequestHandler<SNSEvent, String> {
             }
         }
         return requests;
-    }
-
-    private void writeCloudWatch(String namespace, String prefix, String serial, double value, Date timestamp) {
-        if (!StringUtils.isNullOrEmpty(serial) && !serial.startsWith("X")) {
-            try {
-//				AmazonCloudWatch client = getCwClient();
-//
-//				// set timestamp to zero midnight
-//				Calendar now = Calendar.getInstance();
-//				now.setTime(timestamp);
-//				now.set(Calendar.HOUR, 0);
-//				now.set(Calendar.MINUTE, 0);
-//				now.set(Calendar.SECOND, 0);
-//				timestamp = now.getTime();
-//
-//				PutMetricDataRequest request = new PutMetricDataRequest()
-//						.withMetricData(new MetricDatum().withMetricName(prefix + "-" + serial).withValue(value)
-//								.withTimestamp(timestamp).withUnit(StandardUnit.Count)
-//								.withDimensions(new Dimension().withName(prefix).withValue(serial)))
-//						.withNamespace(namespace);
-//
-//				client.putMetricData(request);
-
-                _log.info("Put Metric: " + namespace + ":" + prefix + ":" + serial + ":" + timestamp + ":" + value);
-            } catch (Exception e) {
-                _log.error("Exception: ", e);
-            }
-        } else {
-            _log.error("Serial Number empty or null or XXXXXX = " + serial);
-        }
     }
 
     String getEnvironmentVariable(String envVar) {

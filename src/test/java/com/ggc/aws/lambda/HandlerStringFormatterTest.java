@@ -19,7 +19,7 @@ public class HandlerStringFormatterTest extends HandlerTestBase{
     public void testHandle() throws Exception {
         HandlerStringFormatter target = new HandlerStringFormatter();
 
-        String string = new String(Files.readAllBytes(Paths.get("src", "test", "resources", "s3Object.txt")));
+        String string = new String(Files.readAllBytes(Paths.get("src", "test", "resources", "s3object.txt")));
         InputStream stream = new ByteArrayInputStream(string.getBytes(StandardCharsets.UTF_8));
 
         // setup mock
